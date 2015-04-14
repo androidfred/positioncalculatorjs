@@ -4,7 +4,7 @@ var expect = require('chai').expect;
 
 describe("index", function () {
     describe("builder", function () {
-        it("should not accept null arguments", function () {
+        it("should not accept undefined arguments", function () {
             var fn = function () {
                 index.builder()
                     .capital()
@@ -12,6 +12,17 @@ describe("index", function () {
                     .direction()
                     .pricePerUnit()
                     .stopLossPricePerUnit()
+            };
+            expect(fn).to.throw(TypeError, /argument must be a number with positive signum/);
+        });
+        it("should not accept null arguments", function () {
+            var fn = function () {
+                index.builder(null)
+                    .capital(null)
+                    .tolerableRiskInPercentOfCapitalPerTrade(null)
+                    .direction(null)
+                    .pricePerUnit(null)
+                    .stopLossPricePerUnit(null)
             };
             expect(fn).to.throw(TypeError, /argument must be a number with positive signum/);
         });
