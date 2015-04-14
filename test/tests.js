@@ -57,7 +57,18 @@ describe("index", function () {
                     .pricePerUnit(25)
                     .stopLossPricePerUnit(24)
             };
-            expect(fn).to.throw(TypeError, /direction must be a string/);
+            expect(fn).to.throw(TypeError, /direction must not be falsey/);
+        });
+        it("should not accept direction to be null", function () {
+            var fn = function () {
+                index.builder()
+                    .capital(10000)
+                    .tolerableRiskInPercentOfCapitalPerTrade(2)
+                    .direction()
+                    .pricePerUnit(25)
+                    .stopLossPricePerUnit(24)
+            };
+            expect(fn).to.throw(TypeError, /direction must not be falsey/);
         });
         it("should not accept direction to be another string than either long or short", function () {
             var fn = function () {

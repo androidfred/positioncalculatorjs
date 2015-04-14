@@ -70,11 +70,13 @@ module.exports = {
         };
 
         position.direction = function (newDirection) {
+            if (!newDirection){
+                throw new TypeError('direction must not be falsey');
+            }
             if (!typeof newDirection == 'string' || !newDirection instanceof String){
                 throw new TypeError('direction must be a string');
             }
-            if (!(newDirection.toLowerCase() === 'long' ||
-                newDirection.toLowerCase() === 'short')) {
+            if (!(newDirection.toLowerCase() === 'long' || newDirection.toLowerCase() === 'short')) {
                 throw new TypeError('direction must be either long or short');
             }
             direction = newDirection;
