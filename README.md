@@ -4,9 +4,9 @@ positioncalculatorjs
 Trading calculator for fixed percent risk position sizing (ported from Java code found at https://github.com/androidfred/positioncalculator)
 
 ## Installation
-
-  npm install positioncalculatorjs --save
-
+```
+npm install positioncalculatorjs --save
+```
 ## Usage
 
 ```javascript
