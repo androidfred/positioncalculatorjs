@@ -1,5 +1,10 @@
 Ported from Java code found at https://github.com/androidfred/positioncalculator
 
+## Installation
+```
+npm install positionsizingcalculator --save
+```
+
 ## Usage
 ```javascript
 var positionBuilder = require('positionsizingcalculator');
@@ -16,6 +21,11 @@ position.getTotal();
 position.getTotalTolerableRiskPerTrade();
 position.getStopLossPerUnitLoss();
 position.getStopLossTotalLoss();
+```
+
+## Tests
+```
+npm test
 ```
 
 ## Unlicense
