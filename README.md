@@ -2,7 +2,7 @@ Ported from Java code found at https://github.com/androidfred/positioncalculator
 
 ## Usage
 ```javascript
-var positionBuilder = require('positioncalculatorjs')
+var positionBuilder = require('positionsizingcalculator')
   
 var position = positionBuilder()
   .capital(10000)
