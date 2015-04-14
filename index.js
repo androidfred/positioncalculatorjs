@@ -2,7 +2,8 @@ module.exports = {
     builder: function () {
 
         basicValidate = function (argument) {
-            if (isNaN(argument) ||
+            if (!argument ||
+                isNaN(argument) ||
                 typeof argument !== 'number' ||
                 argument < 0 ||
                 argument == 0 ||
