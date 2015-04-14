@@ -1,0 +1,29 @@
+{
+  "name": "positioncalculatorjs",
+  "version": "1.0.0",
+  "description": "Trading calculator for fixed percent risk position sizing",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules\\.bin\\mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/androidfred/positioncalculatorjs.git"
+  },
+  "keywords": [
+    "trading"
+  ],
+  "author": "Fredrik Friis <fre.and.fri@gmail.com> (http://bedobi.com/)",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/androidfred/positioncalculatorjs/issues"
+  },
+  "homepage": "https://github.com/androidfred/positioncalculatorjs",
+  "devDependencies": {
+    "chai": "^2.2.0",
+    "gulp": "^3.8.11",
+    "gulp-mocha": "^2.0.1",
+    "gulp-util": "^3.0.4",
+    "mocha": "^2.2.4"
+  }
+}
