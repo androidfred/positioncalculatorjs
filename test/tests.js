@@ -13,7 +13,7 @@ describe("index", function () {
                     .pricePerUnit()
                     .stopLossPricePerUnit()
             };
-            expect(fn).to.throw(TypeError);
+            expect(fn).to.throw(TypeError, /argument must be a number with positive signum/);
         });
         it("should not accept zero arguments", function () {
             var fn = function () {
@@ -24,7 +24,7 @@ describe("index", function () {
                     .pricePerUnit(0)
                     .stopLossPricePerUnit(0)
             };
-            expect(fn).to.throw(TypeError);
+            expect(fn).to.throw(TypeError, /argument must be a number with positive signum/);
         });
         it("should not accept negative arguments", function () {
             var fn = function () {
@@ -48,7 +48,7 @@ describe("index", function () {
             };
             expect(fn).to.throw(TypeError);
         });
-        it("should require direction to be long or short 1", function () {
+        it("should not accept direction to be a number", function () {
             var fn = function () {
                 index.builder()
                     .capital(10000)
@@ -57,9 +57,9 @@ describe("index", function () {
                     .pricePerUnit(25)
                     .stopLossPricePerUnit(24)
             };
-            expect(fn).to.throw(TypeError);
+            expect(fn).to.throw(TypeError, /direction must be a string/);
         });
-        it("should require direction to be long or short 2", function () {
+        it("should not accept direction to be another string than either long or short", function () {
             var fn = function () {
                 index.builder()
                     .capital(10000)
@@ -68,7 +68,7 @@ describe("index", function () {
                     .pricePerUnit(25)
                     .stopLossPricePerUnit(24)
             };
-            expect(fn).to.throw(TypeError);
+            expect(fn).to.throw(TypeError, /direction must be either long or short/);
         });
         it("should require stop loss price to be lower than price when long", function () {
             var fn = function () {
