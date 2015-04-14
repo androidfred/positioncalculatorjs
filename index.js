@@ -35,7 +35,7 @@ module.exports = {
         };
 
         position.getUnitsToBuy = function () {
-            var result = position.getTotalTolerableRiskPerTrade() / position.getStopLossPerUnitLoss();
+            var result = Math.floor(position.getTotalTolerableRiskPerTrade() / position.getStopLossPerUnitLoss());
             if (position.getCapital() <= (result * position.getPricePerUnit())) {
                 return 0;
             } else {
