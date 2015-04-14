@@ -5,7 +5,8 @@ module.exports = {
             if (isNaN(argument) ||
                 typeof argument !== 'number' ||
                 argument < 0 ||
-                argument == 0 || !isFinite(argument)) {
+                argument == 0 ||
+                !isFinite(argument)) {
                 throw new TypeError('argument must be a number with positive signum');
             }
         };
