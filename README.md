@@ -4,18 +4,18 @@ Ported from Java code found at https://github.com/androidfred/positioncalculator
 ```javascript
 var positioncalculatorjs = require('positioncalculatorjs')
   
-  var position = positioncalculatorjs.builder()
-    .capital(10000)
-    .tolerableRiskInPercentOfCapitalPerTrade(2)
-    .direction('long')
-    .pricePerUnit(25)
-    .stopLossPricePerUnit(24);
+var position = positioncalculatorjs.builder()
+  .capital(10000)
+  .tolerableRiskInPercentOfCapitalPerTrade(2)
+  .direction('long')
+  .pricePerUnit(25)
+  .stopLossPricePerUnit(24);
   
-  position.getUnitsToBuy();
-  position.getTotal();
-  position.getTotalTolerableRiskPerTrade();
-  position.getStopLossPerUnitLoss();
-  position.getStopLossTotalLoss();
+position.getUnitsToBuy();
+position.getTotal();
+position.getTotalTolerableRiskPerTrade();
+position.getStopLossPerUnitLoss();
+position.getStopLossTotalLoss();
 ```
 
 ## Tests
