@@ -4,6 +4,26 @@ var expect = require('chai').expect;
 
 describe("index", function(){
     describe("builder", function(){
+
+        it("should require stop loss price to be lower than price when long", function(){
+            var fn = function () {index.builder()
+                .capital(10000)
+                .tolerableRiskInPercentOfCapitalPerTrade(2)
+                .direction('long')
+                .pricePerUnit(25)
+                .stopLossPricePerUnit(26)};
+            expect(fn).to.throw(TypeError);
+        });
+        it("should require stop loss price to be higher than price when short", function(){
+            var fn = function () {index.builder()
+                .capital(10000)
+                .tolerableRiskInPercentOfCapitalPerTrade(2)
+                .direction('short')
+                .pricePerUnit(26)
+                .stopLossPricePerUnit(25)};
+            expect(fn).to.throw(TypeError);
+        });
+
         it("should not accept null arguments", function(){
             var fn = function () {index.builder()
                 .capital()
@@ -40,7 +60,7 @@ describe("index", function(){
                 .stopLossPricePerUnit(24)};
             expect(fn).to.throw(TypeError);
         });
-        it("should require direction to be long or short", function(){
+        it("should require direction to be long or short 1", function(){
             var fn = function () {index.builder()
                 .capital(10000)
                 .tolerableRiskInPercentOfCapitalPerTrade(2)
@@ -49,24 +69,18 @@ describe("index", function(){
                 .stopLossPricePerUnit(24)};
             expect(fn).to.throw(TypeError);
         });
-        it("should require stop loss price to be lower than price when long", function(){
+        it("should require direction to be long or short 2", function(){
             var fn = function () {index.builder()
                 .capital(10000)
                 .tolerableRiskInPercentOfCapitalPerTrade(2)
-                .direction('long')
+                .direction('blah')
                 .pricePerUnit(25)
-                .stopLossPricePerUnit(26)};
+                .stopLossPricePerUnit(24)};
             expect(fn).to.throw(TypeError);
         });
-        it("should require stop loss price to be higher than price when short", function(){
-            var fn = function () {index.builder()
-                .capital(10000)
-                .tolerableRiskInPercentOfCapitalPerTrade(2)
-                .direction('short')
-                .pricePerUnit(26)
-                .stopLossPricePerUnit(25)};
-            expect(fn).to.throw(TypeError);
-        });
+
+
+
         it("should reflect arguments long", function(){
             var position = index.builder()
                 .capital(10000)
@@ -94,4 +108,4 @@ describe("index", function(){
             position.getStopLossPricePerUnit().should.equal(25);
         })
     })
-})
+});

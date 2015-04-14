@@ -43,7 +43,7 @@ module.exports = {
         position.direction = function (newDirection) {
             if (!typeof newDirection == 'string' ||
                 !newDirection instanceof String ||
-                (!newDirection.toUpperCase() === 'long' || !newDirection.toUpperCase() === 'short')){
+                !(newDirection.toLowerCase() === 'long' || newDirection.toLowerCase() === 'short')){
                     throw new TypeError('direction must be either long or short');
             }
             direction = newDirection;
@@ -64,11 +64,11 @@ module.exports = {
 
         position.stopLossPricePerUnit = function (newStopLossPricePerUnit) {
             basicValidate(newStopLossPricePerUnit);
-            if (position.getDirection().toUpperCase() === 'long' && newStopLossPricePerUnit > position.getPricePerUnit){
+            if (position.getDirection().toLowerCase() === 'long' && position.getPricePerUnit() <= newStopLossPricePerUnit){
                 throw new TypeError('stop loss price per unit must be lower than price per unit when long');
             }
-            if (position.getDirection().toUpperCase() === 'short' && newStopLossPricePerUnit < position.getPricePerUnit){
-                throw new TypeError('stop loss price per unit must be higher than price per unit when long');
+            if (position.getDirection().toLowerCase() === 'short' && position.getPricePerUnit() >= newStopLossPricePerUnit){
+                throw new TypeError('stop loss price per unit must be higher than price per unit when short');
             }
             stopLossPricePerUnit = newStopLossPricePerUnit;
             return position;
