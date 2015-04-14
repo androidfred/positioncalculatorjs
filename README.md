@@ -1,11 +1,6 @@
 Ported from Java code found at https://github.com/androidfred/positioncalculator
 
-## Installation
-```
-npm install positioncalculatorjs --save
-```
 ## Usage
-
 ```javascript
 var positioncalculatorjs = require('positioncalculatorjs')
   
