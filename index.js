@@ -5,9 +5,8 @@ module.exports = {
             if (isNaN(argument) ||
                 typeof argument !== 'number' ||
                 argument < 0 ||
-                argument == 0 ||
-                !isFinite(argument)){
-                    throw new TypeError('argument must be a number with positive signum');
+                argument == 0 || !isFinite(argument)) {
+                throw new TypeError('argument must be a number with positive signum');
             }
         };
 
@@ -18,6 +17,35 @@ module.exports = {
         var stopLossPricePerUnit;
 
         var position = {};
+
+        position.getTotalTolerableRiskPerTrade = function () {
+            return position.getCapital() * (position.getTolerableRiskInPercentOfCapitalPerTrade() / 100);
+        };
+
+        position.getStopLossPerUnitLoss = function () {
+            if (position.getDirection().toLowerCase() === 'long') {
+                return position.getPricePerUnit() - position.getStopLossPricePerUnit();
+            } else {
+                return position.getStopLossPricePerUnit() - position.getPricePerUnit();
+            }
+        };
+
+        position.getStopLossTotalLoss = function () {
+            return position.getStopLossPerUnitLoss() * position.getUnitsToBuy();
+        };
+
+        position.getUnitsToBuy = function () {
+            var result = position.getTotalTolerableRiskPerTrade() / position.getStopLossPerUnitLoss();
+            if (position.getCapital() <= (result * position.getPricePerUnit())) {
+                return 0;
+            } else {
+                return result;
+            }
+        };
+
+        position.getTotal = function () {
+            return position.getUnitsToBuy() * position.getPricePerUnit();
+        };
 
         position.capital = function (newCapital) {
             basicValidate(newCapital);
@@ -30,7 +58,7 @@ module.exports = {
 
         position.tolerableRiskInPercentOfCapitalPerTrade = function (newTolerableRiskInPercentOfCapitalPerTrade) {
             basicValidate(newTolerableRiskInPercentOfCapitalPerTrade);
-            if (newTolerableRiskInPercentOfCapitalPerTrade >= 100){
+            if (newTolerableRiskInPercentOfCapitalPerTrade >= 100) {
                 throw new TypeError('tolerable risk in percent of capital per trade must be less than 100');
             }
             tolerableRiskInPercentOfCapitalPerTrade = newTolerableRiskInPercentOfCapitalPerTrade;
@@ -42,9 +70,8 @@ module.exports = {
 
         position.direction = function (newDirection) {
             if (!typeof newDirection == 'string' ||
-                !newDirection instanceof String ||
-                !(newDirection.toLowerCase() === 'long' || newDirection.toLowerCase() === 'short')){
-                    throw new TypeError('direction must be either long or short');
+                !newDirection instanceof String || !(newDirection.toLowerCase() === 'long' || newDirection.toLowerCase() === 'short')) {
+                throw new TypeError('direction must be either long or short');
             }
             direction = newDirection;
             return position;
@@ -64,10 +91,10 @@ module.exports = {
 
         position.stopLossPricePerUnit = function (newStopLossPricePerUnit) {
             basicValidate(newStopLossPricePerUnit);
-            if (position.getDirection().toLowerCase() === 'long' && position.getPricePerUnit() <= newStopLossPricePerUnit){
+            if (position.getDirection().toLowerCase() === 'long' && position.getPricePerUnit() <= newStopLossPricePerUnit) {
                 throw new TypeError('stop loss price per unit must be lower than price per unit when long');
             }
-            if (position.getDirection().toLowerCase() === 'short' && position.getPricePerUnit() >= newStopLossPricePerUnit){
+            if (position.getDirection().toLowerCase() === 'short' && position.getPricePerUnit() >= newStopLossPricePerUnit) {
                 throw new TypeError('stop loss price per unit must be higher than price per unit when short');
             }
             stopLossPricePerUnit = newStopLossPricePerUnit;
