@@ -1,5 +1,5 @@
 {
-  "name": "positioncalculatorjs",
+  "name": "positionsizingcalculator",
   "version": "0.1.0",
   "description": "Trading calculator for fixed percent risk position sizing",
   "main": "index.js",
@@ -19,7 +19,7 @@
     "position",
     "sizing"
   ],
-  "author": "Fredrik Friis <fre.and.fri@gmail.com> (http://bedobi.com/)",
+  "author": "Fredrik Friis <fre.and.fri@gmail.com> (http://bedobi.com)",
   "license": "Unlicense",
   "bugs": {
     "url": "https://github.com/androidfred/positioncalculatorjs/issues"
