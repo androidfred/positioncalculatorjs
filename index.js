@@ -1,5 +1,4 @@
-module.exports = {
-    builder: function () {
+module.exports = function () {
 
         basicValidate = function (argument) {
             if (!argument ||
@@ -112,5 +111,5 @@ module.exports = {
         };
 
         return position;
-    }
+
 };
