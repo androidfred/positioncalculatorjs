@@ -77,7 +77,7 @@ describe("index", function () {
                     .tolerableRiskInPercentOfCapitalPerTrade(2)
                     .direction('long')
                     .pricePerUnit(25)
-                    .stopLossPricePerUnit(26)
+                    .stopLossPricePerUnit(25)
             };
             expect(fn).to.throw(TypeError);
         });
@@ -87,7 +87,7 @@ describe("index", function () {
                     .capital(10000)
                     .tolerableRiskInPercentOfCapitalPerTrade(2)
                     .direction('short')
-                    .pricePerUnit(26)
+                    .pricePerUnit(25)
                     .stopLossPricePerUnit(25)
             };
             expect(fn).to.throw(TypeError);
