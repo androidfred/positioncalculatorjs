@@ -2,9 +2,9 @@ Ported from Java code found at https://github.com/androidfred/positioncalculator
 
 ## Usage
 ```javascript
-var positioncalculatorjs = require('positioncalculatorjs')
+var positionBuilder = require('positioncalculatorjs')
   
-var position = positioncalculatorjs.builder()
+var position = positionBuilder()
   .capital(10000)
   .tolerableRiskInPercentOfCapitalPerTrade(2)
   .direction('long')
