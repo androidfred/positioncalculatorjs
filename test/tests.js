@@ -3,7 +3,7 @@ var should = require('chai').should();
 var expect = require('chai').expect;
 
 describe("index", function () {
-    describe("builder", function () {
+
         it("should not accept undefined arguments", function () {
             var fn = function () {
                 index.builder()
@@ -221,5 +221,5 @@ describe("index", function () {
             position.getPricePerUnit().should.equal(24);
             position.getStopLossPricePerUnit().should.equal(25);
         })
-    })
+
 });
