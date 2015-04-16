@@ -1,7 +1,7 @@
 {
-  "name": "positiosizingcalculator",
+  "name": "positionsizingcalculator",
   "main": "index.js",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "homepage": "https://github.com/androidfred/positioncalculatorjs",
   "authors": [
     "Fredrik Friis <fre.and.fri@gmail.com>"

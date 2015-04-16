@@ -1,6 +1,6 @@
 {
   "name": "positionsizingcalculator",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Trading calculator for fixed percent risk position sizing",
   "main": "index.js",
   "scripts": {
