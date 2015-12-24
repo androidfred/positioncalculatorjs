@@ -7,20 +7,15 @@ npm install positionsizingcalculator --save
 
 ## Usage
 ```javascript
-var positionBuilder = require('positionsizingcalculator');
+var positionSizingCalculator = require('positionsizingcalculator');
   
-var position = positionBuilder()
-  .capital(10000)
-  .tolerableRiskInPercentOfCapitalPerTrade(2)
-  .direction('long')
-  .pricePerUnit(25)
-  .stopLossPricePerUnit(24);
+var position = positionSizingCalculator.calculate(10000, 2, 'long', 25, 24);
   
-position.getUnitsToBuy();
-position.getTotal();
-position.getTotalTolerableRiskPerTrade();
-position.getStopLossPerUnitLoss();
-position.getStopLossTotalLoss();
+positionSizingCalculator.getUnitsToBuy();
+positionSizingCalculator.getTotal();
+positionSizingCalculator.getTotalTolerableRiskPerTrade();
+positionSizingCalculator.getStopLossPerUnitLoss();
+positionSizingCalculator.getStopLossTotalLoss();
 ```
 
 ## Tests

@@ -1,113 +1,191 @@
 module.exports = function () {
 
-    basicValidate = function (argument) {
-        if (!argument ||
-            isNaN(argument) ||
-            typeof argument !== 'number' ||
-            argument < 0 ||
-            argument == 0 || !isFinite(argument)) {
-            throw new TypeError('argument must be a number with positive signum');
+    //This is a learning experiment in "Fundamentalist OO in JavaScript", eg:
+    //
+    //* Long and Short inherit most of their behavior from the parent prototype ("class") Position
+    //* inputs like Capital are instantiated as objects which enforce own validation, provide own behavior etc
+    //* inputs use declarative composable decorators to reuse shared behavior
+    //
+    //I don't necessarily advocate using this style in JavaScript, nonetheless it's fun to experiment and learn
+    // how to implement things in different styles.
+
+    var calculator = {};
+
+    var PositiveSignum = function (verify) {
+        if (!verify ||
+            isNaN(verify) ||
+            typeof verify !== 'number' ||
+            verify < 0 ||
+            verify === 0 || !isFinite(verify)) {
+            throw new TypeError('All numbers must have positive signum');
         }
+        this.verified = verify;
     };
 
-    var capital;
-    var tolerableRiskInPercentOfCapitalPerTrade;
-    var direction;
-    var pricePerUnit;
-    var stopLossPricePerUnit;
-
-    var position = {};
-
-    position.getTotalTolerableRiskPerTrade = function () {
-        return position.getCapital() * (position.getTolerableRiskInPercentOfCapitalPerTrade() / 100);
+    PositiveSignum.prototype.provide = function () {
+        return this.verified;
     };
 
-    position.getStopLossPerUnitLoss = function () {
-        if (position.getDirection().toLowerCase() === 'long') {
-            return position.getPricePerUnit() - position.getStopLossPricePerUnit();
-        } else {
-            return position.getStopLossPricePerUnit() - position.getPricePerUnit();
+    var Capital = function (verify) {
+        this.verified = new PositiveSignum(verify).provide();
+    };
+
+    Capital.prototype.provide = function () {
+        return this.verified;
+    };
+
+    var PricePerUnit = function (verify) {
+        this.verified = new PositiveSignum(verify).provide();
+    };
+
+    PricePerUnit.prototype.provide = function () {
+        return this.verified;
+    };
+
+    var StopLossPricePerUnit = function (verify) {
+        this.verified = new PositiveSignum(verify).provide();
+    };
+
+    StopLossPricePerUnit.prototype.provide = function () {
+        return this.verified;
+    };
+
+    var Below = function (verify) {
+        if (!(new PositiveSignum(verify).provide() < 100)) {
+            throw new TypeError('Tolerable risk in percent of capital per trade must be less than 100');
         }
+        this.verified = verify;
     };
 
-    position.getStopLossTotalLoss = function () {
-        return position.getStopLossPerUnitLoss() * position.getUnitsToBuy();
+    Below.prototype.provide = function () {
+        return this.verified;
     };
 
-    position.getUnitsToBuy = function () {
-        var result = Math.floor(position.getTotalTolerableRiskPerTrade() / position.getStopLossPerUnitLoss());
-        if (position.getCapital() <= (result * position.getPricePerUnit())) {
+    var TolerableRiskInPercentOfCapital = function (verify) {
+        this.verified = new Below(verify).provide();
+    };
+
+    TolerableRiskInPercentOfCapital.prototype.provide = function () {
+        return this.verified;
+    };
+
+    var Position = function (capital,
+                             tolerableRiskInPercentOfCapital,
+                             pricePerUnit,
+                             stopLossPricePerUnit) {
+        this.capital = capital;
+        this.tolerableRiskInPercentOfCapital = tolerableRiskInPercentOfCapital;
+        this.pricePerUnit = pricePerUnit;
+        this.stopLossPricePerUnit = stopLossPricePerUnit;
+    };
+
+    Position.prototype.getTotalTolerableRiskPerTrade = function () {
+        return (this.capital.provide() * (this.tolerableRiskInPercentOfCapital.provide() / 100)).toFixed(2);
+    };
+
+    Position.prototype.getStopLossPerUnitLoss = function () {
+
+    };
+
+    Position.prototype.getStopLossTotalLoss = function () {
+        return (this.getStopLossPerUnitLoss() * this.getUnitsToBuy()).toFixed(2);
+    };
+
+    Position.prototype.getUnitsToBuy = function () {
+        var result = Math.floor((this.getTotalTolerableRiskPerTrade() / this.getStopLossPerUnitLoss()));
+        if (this.capital.provide() <= (result * this.pricePerUnit.provide())) {
             return 0;
         } else {
             return result;
         }
     };
 
-    position.getTotal = function () {
-        return position.getUnitsToBuy() * position.getPricePerUnit();
+    Position.prototype.getTotal = function () {
+        return (this.getUnitsToBuy() * this.getPricePerUnit()).toFixed(2);
     };
 
-    position.capital = function (newCapital) {
-        basicValidate(newCapital);
-        capital = newCapital;
-        return position;
-    };
-    position.getCapital = function () {
-        return capital;
+    Position.prototype.getPricePerUnit = function () {
+        return this.pricePerUnit.provide();
     };
 
-    position.tolerableRiskInPercentOfCapitalPerTrade = function (newTolerableRiskInPercentOfCapitalPerTrade) {
-        basicValidate(newTolerableRiskInPercentOfCapitalPerTrade);
-        if (newTolerableRiskInPercentOfCapitalPerTrade >= 100) {
-            throw new TypeError('tolerable risk in percent of capital per trade must be less than 100');
+    function Long(capital,
+                  tolerableRiskInPercentOfCapital,
+                  pricePerUnit,
+                  stopLossPricePerUnit) {
+        if (pricePerUnit.provide() <= stopLossPricePerUnit.provide()) {
+            throw new TypeError('Stop loss price per unit must be lower than price per unit when long');
         }
-        tolerableRiskInPercentOfCapitalPerTrade = newTolerableRiskInPercentOfCapitalPerTrade;
-        return position;
-    };
-    position.getTolerableRiskInPercentOfCapitalPerTrade = function () {
-        return tolerableRiskInPercentOfCapitalPerTrade;
+        Position.call(this,
+            capital,
+            tolerableRiskInPercentOfCapital,
+            pricePerUnit,
+            stopLossPricePerUnit);
+
+    }
+
+    Long.prototype = Object.create(Position.prototype);
+    Long.prototype.constructor = Position;
+    Long.prototype.getStopLossPerUnitLoss = function () {
+        return (this.pricePerUnit.provide() - this.stopLossPricePerUnit.provide()).toFixed(2);
     };
 
-    position.direction = function (newDirection) {
-        if (!newDirection) {
+    function Short(capital,
+                   tolerableRiskInPercentOfCapital,
+                   pricePerUnit,
+                   stopLossPricePerUnit) {
+        if (pricePerUnit.provide() >= stopLossPricePerUnit.provide()) {
+            throw new TypeError('Stop loss price per unit must be higher than price per unit when short');
+        }
+        Position.call(this,
+            capital,
+            tolerableRiskInPercentOfCapital,
+            pricePerUnit,
+            stopLossPricePerUnit);
+
+    }
+
+    Short.prototype = Object.create(Position.prototype);
+    Short.prototype.constructor = Position;
+    Short.prototype.getStopLossPerUnitLoss = function () {
+        return (this.stopLossPricePerUnit.provide() - this.pricePerUnit.provide()).toFixed(2);
+    };
+
+    var validateDirection = function(direction){
+        if (!direction) {
             throw new TypeError('direction must not be falsey');
         }
-        if (!typeof newDirection == 'string' || !newDirection instanceof String) {
+        if (typeof direction !== 'string' || !direction instanceof String) {
             throw new TypeError('direction must be a string');
         }
-        if (!(newDirection.toLowerCase() === 'long' || newDirection.toLowerCase() === 'short')) {
+        if (!(direction.toLowerCase() === 'long' || direction.toLowerCase() === 'short')) {
             throw new TypeError('direction must be either long or short');
         }
-        direction = newDirection;
-        return position;
-    };
-    position.getDirection = function () {
-        return direction;
     };
 
-    position.pricePerUnit = function (newPricePerUnit) {
-        basicValidate(newPricePerUnit);
-        pricePerUnit = newPricePerUnit;
-        return position;
-    };
-    position.getPricePerUnit = function () {
-        return pricePerUnit;
-    };
-
-    position.stopLossPricePerUnit = function (newStopLossPricePerUnit) {
-        basicValidate(newStopLossPricePerUnit);
-        if (position.getDirection().toLowerCase() === 'long' && position.getPricePerUnit() <= newStopLossPricePerUnit) {
-            throw new TypeError('stop loss price per unit must be lower than price per unit when long');
+    //This function is ugly, it would be better if the controller instantiated either a long or a short
+    //based on the direction. Oh well.
+    calculator.calculate = function (capital,
+                               tolerableRiskInPercentOfCapitalPerTrade,
+                               direction,
+                               pricePerUnit,
+                               stopLossPricePerUnit) {
+        validateDirection(direction);
+        if (direction.toLowerCase() === 'long') {
+            return new Long(
+                new Capital(capital),
+                new TolerableRiskInPercentOfCapital(tolerableRiskInPercentOfCapitalPerTrade),
+                new PricePerUnit(pricePerUnit),
+                new StopLossPricePerUnit(stopLossPricePerUnit)
+            );
+        } else {
+            return new Short(
+                new Capital(capital),
+                new TolerableRiskInPercentOfCapital(tolerableRiskInPercentOfCapitalPerTrade),
+                new PricePerUnit(pricePerUnit),
+                new StopLossPricePerUnit(stopLossPricePerUnit)
+            );
         }
-        if (position.getDirection().toLowerCase() === 'short' && position.getPricePerUnit() >= newStopLossPricePerUnit) {
-            throw new TypeError('stop loss price per unit must be higher than price per unit when short');
-        }
-        stopLossPricePerUnit = newStopLossPricePerUnit;
-        return position;
-    };
-    position.getStopLossPricePerUnit = function () {
-        return stopLossPricePerUnit;
     };
 
-    return position;
+    return calculator;
 };
