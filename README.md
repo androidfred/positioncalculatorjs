@@ -9,7 +9,11 @@ npm install positionsizingcalculator --save
 ```javascript
 var positionSizingCalculator = require('positionsizingcalculator');
   
-var position = positionSizingCalculator.calculate(10000, 2, 'long', 25, 24);
+var position = positionSizingCalculator.calculate(10000, //capital
+                                                  2,     //tolerable risk in percent of capital
+                                                  'long',//direction
+                                                  25,    //unit price
+                                                  24);   //desired stop loss unit price
   
 positionSizingCalculator.getUnitsToBuy();
 positionSizingCalculator.getTotal();
